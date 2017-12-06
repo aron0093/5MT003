@@ -1,4 +1,10 @@
-'''import numpy as np
+'''
+06/12/2017 15:22
+
+DanQ modified by Revant Gupta to work with keras 2.1.1.
+
+'''
+import numpy as np
 import h5py
 import scipy.io
 np.random.seed(1337) # for reproducibility
@@ -10,9 +16,9 @@ from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Convolution1D, MaxPooling1D
 from keras.regularizers import l2, activity_l1
 from keras.constraints import maxnorm
-from keras.layers.recurrent import LSTM, GRU
+from keras.layers.recurrent import LSTM
 from keras.callbacks import ModelCheckpoint, EarlyStopping
-from seya.layers.recurrent import Bidirectional
+from keras.wrappers import Bidirectional
 from keras.utils.layer_utils import print_layer_shapes
 
 
@@ -24,9 +30,8 @@ testmat = scipy.io.loadmat('data/test.mat')
 X_train = np.transpose(np.array(trainmat['trainxdata']),axes=(2,0,1))
 y_train = np.array(trainmat['traindata']).T
 
-forward_lstm = LSTM(input_dim=320, output_dim=320, return_sequences=True)
-backward_lstm = LSTM(input_dim=320, output_dim=320, return_sequences=True)
-brnn = Bidirectional(forward=forward_lstm, backward=backward_lstm, return_sequences=True)
+lstm = LSTM(input_dim=320, output_dim=320, return_sequences=True)
+brnn = Bidirectional(lstm)
 
 print 'building model'
 
@@ -67,5 +72,5 @@ model.fit(X_train, y_train, batch_size=100, nb_epoch=60, shuffle=True, show_accu
 
 tresults = model.evaluate(np.transpose(testmat['testxdata'],axes=(0,2,1)), testmat['testdata'],show_accuracy=True)
 
-print tresults'''
+print tresults
 
