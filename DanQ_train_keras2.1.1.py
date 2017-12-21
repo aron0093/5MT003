@@ -13,38 +13,36 @@ from keras.preprocessing import sequence
 from keras.optimizers import RMSprop
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.layers.convolutional import Convolution1D, MaxPooling1D
-from keras.regularizers import l2, activity_l1
+from keras.layers.convolutional import Conv1D, MaxPooling1D
+#from keras.regularizers import l2, activity_l1
 from keras.constraints import maxnorm
 from keras.layers.recurrent import LSTM
 from keras.callbacks import ModelCheckpoint, EarlyStopping
-from keras.wrappers import Bidirectional
-from keras.utils.layer_utils import print_layer_shapes
+from keras.layers import Bidirectional
+#from keras.utils.layer_utils import print_layer_shapes
 
 
 print 'loading data'
-trainmat = h5py.File('data/train.mat')
-validmat = scipy.io.loadmat('data/valid.mat')
-testmat = scipy.io.loadmat('data/test.mat')
+#trainmat = h5py.File('data/train.mat')
+#validmat = scipy.io.loadmat('data/valid.mat')
+#testmat = scipy.io.loadmat('data/test.mat')
 
-X_train = np.transpose(np.array(trainmat['trainxdata']),axes=(2,0,1))
-y_train = np.array(trainmat['traindata']).T
+#X_train = np.transpose(np.array(trainmat['trainxdata']),axes=(2,0,1))
+#y_train = np.array(trainmat['traindata']).T
 
-lstm = LSTM(input_dim=320, output_dim=320, return_sequences=True)
+X_train = np.ones((500,4))
+Y_train = np.zeros((500,919))
+
+
+lstm = LSTM(units=320, return_sequences=True)
 brnn = Bidirectional(lstm)
 
 print 'building model'
 
 model = Sequential()
-model.add(Convolution1D(input_dim=4,
-                        input_length=1000,
-                        nb_filter=320,
-                        filter_length=26,
-                        border_mode="valid",
-                        activation="relu",
-                        subsample_length=1))
+model.add(Conv1D(320, 26, input_shape=(None,4)))
 
-model.add(MaxPooling1D(pool_length=13, stride=13))
+model.add(MaxPooling1D(strides=13, pool_size=13))
 
 model.add(Dropout(0.2))
 
@@ -54,14 +52,14 @@ model.add(Dropout(0.5))
 
 model.add(Flatten())
 
-model.add(Dense(input_dim=75*640, output_dim=925))
+model.add(Dense(925))
 model.add(Activation('relu'))
 
-model.add(Dense(input_dim=925, output_dim=919))
+model.add(Dense(919))
 model.add(Activation('sigmoid'))
 
 print 'compiling model'
-model.compile(loss='binary_crossentropy', optimizer='rmsprop', class_mode="binary")
+model.compile(optimizer='rmsprop', loss='binary_crossentropy')
 
 print 'running at most 60 epochs'
 
