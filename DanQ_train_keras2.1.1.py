@@ -30,8 +30,8 @@ print 'loading data'
 #X_train = np.transpose(np.array(trainmat['trainxdata']),axes=(2,0,1))
 #y_train = np.array(trainmat['traindata']).T
 
-X_train = np.ones((500,4))
-Y_train = np.zeros((500,919))
+X_train = np.ones((500,500,4))
+y_train = np.zeros((500,919))
 
 
 lstm = LSTM(units=320, return_sequences=True)
@@ -40,7 +40,7 @@ brnn = Bidirectional(lstm)
 print 'building model'
 
 model = Sequential()
-model.add(Conv1D(320, 26, input_shape=(None,4)))
+model.add(Conv1D(320, 26, input_shape=(500,4)))
 
 model.add(MaxPooling1D(strides=13, pool_size=13))
 
@@ -66,9 +66,12 @@ print 'running at most 60 epochs'
 checkpointer = ModelCheckpoint(filepath="DanQ_bestmodel.hdf5", verbose=1, save_best_only=True)
 earlystopper = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
 
-model.fit(X_train, y_train, batch_size=100, nb_epoch=60, shuffle=True, show_accuracy=True, validation_data=(np.transpose(validmat['validxdata'],axes=(0,2,1)), validmat['validdata']), callbacks=[checkpointer,earlystopper])
+model.fit(X_train, y_train, batch_size=100, nb_epoch=60, shuffle=True, verbose=2 #show_accuracy=True,
+          #validation_data=(np.transpose(validmat['validxdata'],axes=(0,2,1)), validmat['validdata']),
+          #callbacks=[checkpointer,earlystopper]
+          )
 
-tresults = model.evaluate(np.transpose(testmat['testxdata'],axes=(0,2,1)), testmat['testdata'],show_accuracy=True)
+#tresults = model.evaluate(np.transpose(testmat['testxdata'],axes=(0,2,1)), testmat['testdata'],show_accuracy=True)
 
 print tresults
 
