@@ -1,7 +1,7 @@
 '''
 06/12/2017 15:22
 
-DanQ modified by Revant Gupta to work with keras 2.1.1.
+DanQ modified by Revant Gupta to work with keras 2.1.1. (later versions are not guaranteed as keras updates can be backward incompatible)
 
 '''
 import numpy as np
@@ -22,7 +22,7 @@ from keras.layers import Bidirectional
 #from keras.utils.layer_utils import print_layer_shapes
 
 
-print 'loading data'
+print('loading data')
 #trainmat = h5py.File('data/train.mat')
 #validmat = scipy.io.loadmat('data/valid.mat')
 #testmat = scipy.io.loadmat('data/test.mat')
@@ -30,17 +30,17 @@ print 'loading data'
 #X_train = np.transpose(np.array(trainmat['trainxdata']),axes=(2,0,1))
 #y_train = np.array(trainmat['traindata']).T
 
-X_train = np.ones((500,500,4))
+X_train = np.ones((500,1000,4))
 y_train = np.zeros((500,919))
 
 
 lstm = LSTM(units=320, return_sequences=True)
 brnn = Bidirectional(lstm)
 
-print 'building model'
+print('building model')
 
 model = Sequential()
-model.add(Conv1D(320, 26, input_shape=(500,4)))
+model.add(Conv1D(320, 26, input_shape=(1000,4)))
 
 model.add(MaxPooling1D(strides=13, pool_size=13))
 
@@ -58,10 +58,10 @@ model.add(Activation('relu'))
 model.add(Dense(919))
 model.add(Activation('sigmoid'))
 
-print 'compiling model'
+print('compiling model')
 model.compile(optimizer='rmsprop', loss='binary_crossentropy')
 
-print 'running at most 60 epochs'
+print('running at most 60 epochs')
 
 checkpointer = ModelCheckpoint(filepath="DanQ_bestmodel.hdf5", verbose=1, save_best_only=True)
 earlystopper = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
