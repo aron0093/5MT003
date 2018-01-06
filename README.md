@@ -1,6 +1,10 @@
 ﻿# 5MT003
 Project in molecular techniques in life science at the Karolinska Institute. Part of the Master's course in Molecular Techniques in Life Science associated with the SciLifeLab and conducted at the Royal Institute of Technology (KTH), Karolinska Institute &amp; Stockholm University.
 
+# README
+
+SuperQ is an CNN based autoencoder combined with a random forest classifier. Unlike DanQ we do not use a hybrid reccurent and convolutional network and limit the training of the neural network to 10 epochs greatly enchancing the time and reducing computational cost at comparable performance.
+
 # Project plan
 
 ## Improving compute efficiency of convolution based DNA function predictor
