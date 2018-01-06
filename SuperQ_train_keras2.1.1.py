@@ -14,14 +14,12 @@ import scipy.io
 np.random.seed(1337) # for reproducibility
 
 from keras.preprocessing import sequence
-from keras.optimizers import RMSprop, Nadam
+from keras.optimizers import Nadam
 from keras.models import Sequential
-from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.layers.convolutional import Conv1D, MaxPooling1D
-from keras.constraints import maxnorm
-from keras.layers.recurrent import LSTM
-from keras.callbacks import ModelCheckpoint, EarlyStopping
-from keras.layers import Bidirectional
+from keras.layers.core import Dense
+from keras.layers.convolutional import Conv1D
+from keras.callbacks import EarlyStopping
+
 
 import sklearn as skl
 
