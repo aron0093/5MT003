@@ -61,12 +61,11 @@ model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics = ['accur
 
 print('running at most 60 epochs')
 
-checkpointer = ModelCheckpoint(filepath="DanQ_bestmodel.hdf5", verbose=1, save_best_only=True)
 earlystopper = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
 
 model.fit(X_train, y_train, batch_size=100, epochs=60, shuffle=True, verbose=2,
           validation_data=(np.transpose(validmat['validxdata'],axes=(0,2,1)), validmat['validdata']),
-          callbacks=[checkpointer,earlystopper]
+          callbacks=[earlystopper]
           )
 
 tresults = model.evaluate(np.transpose(testmat['testxdata'],axes=(0,2,1)), testmat['testdata'],show_accuracy=True)
