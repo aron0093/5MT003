@@ -1,3 +1,4 @@
+
 '''
 06/12/2017 15:22
 
@@ -15,8 +16,8 @@ np.random.seed(1337) # for reproducibility
 
 from keras.preprocessing import sequence
 from keras.optimizers import Nadam
-from keras.models import Sequential
-from keras.layers.core import Dense
+from keras.models import Sequential, Model
+from keras.layers.core import Dense, Reshape
 from keras.layers.convolutional import Conv1D
 from keras.callbacks import EarlyStopping
 
@@ -45,7 +46,7 @@ model.add(Dense(500)) # Encoder
 
 model.add(Dense(4000))
 
-model.add(Reshape((1,1000,4))) # Decoder
+model.add(Reshape((975,1000,4))) # Decoder
 
 print('compiling model')
                        
