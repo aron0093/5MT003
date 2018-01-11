@@ -23,6 +23,7 @@ from keras.callbacks import EarlyStopping
 
 
 import sklearn as skl
+from sklearn.ensemble import RandomForestClassifier
 
 print('loading data')
 #trainmat = h5py.File('data/train.mat')
@@ -51,10 +52,10 @@ model.add(Dense(4000))
 model.add(Reshape((1000,4))) # Decoder
 
 print('compiling model')
-                       
+
 model.compile(optimizer= nadam, loss='mse', metrics = ['accuracy'])
 
-encoder = Model(inputs=model.input, outputs=(model.layers[1]).output)
+encoder = Model(inputs=model.input, outputs=(model.layers[2]).output)
 
 earlystopper = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
 
@@ -63,9 +64,9 @@ model.fit(X_train, X_train, batch_size=100, nb_epoch=10, shuffle=True, verbose=2
           #callbacks=[checkpointer,earlystopper]
           )
 
-encodings = model.predict(X_train, batch_size = 100, verbose=2)
+encodings = encoder.predict(X_train, batch_size = 100, verbose=2)
 
-classifier = skl.ensemble.RandomForestClassifier()
+classifier = RandomForestClassifier()
 
 classifier.fit(encodings, y_train)
 
@@ -73,5 +74,5 @@ classifier.fit(encodings, y_train)
 
 #acc = skl.metrics.accuracy_score(testmat['testdata'], evaluation)
 
-print(acc)
+#print(acc)
 
