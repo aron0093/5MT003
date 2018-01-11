@@ -73,5 +73,5 @@ model.fit(X_train, y_train, batch_size=100, nb_epoch=60, shuffle=True, verbose=2
 
 #tresults = model.evaluate(np.transpose(testmat['testxdata'],axes=(0,2,1)), testmat['testdata'],show_accuracy=True)
 
-print tresults
+#print (tresults)
 
