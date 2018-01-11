@@ -59,7 +59,7 @@ model.add(Dense(919))
 model.add(Activation('sigmoid'))
 
 print('compiling model')
-model.compile(optimizer='rmsprop', loss='binary_crossentropy')
+model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics = ['accuracy'])
 
 print('running at most 60 epochs')
 
