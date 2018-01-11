@@ -68,9 +68,11 @@ classifier = RandomForestClassifier()
 
 classifier.fit(encodings, y_train)
 
-evaluation = classifier.predict(np.transpose(testmat['testxdata'],axes=(0,2,1)))
+evaluation = classifier.predict(encoder.predict(np.transpose(testmat['testxdata'],axes=(0,2,1)), batch_size=100, verbose=1))
 
 acc = skl.metrics.accuracy_score(testmat['testdata'], evaluation)
+
+print("Accuracy")
 
 print(acc)
 
