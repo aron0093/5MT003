@@ -26,15 +26,15 @@ import sklearn as skl
 from sklearn.ensemble import RandomForestClassifier
 
 print('loading data')
-#trainmat = h5py.File('data/train.mat')
-#validmat = scipy.io.loadmat('data/valid.mat')
-#testmat = scipy.io.loadmat('data/test.mat')
+trainmat = h5py.File('data/train.mat')
+validmat = scipy.io.loadmat('data/valid.mat')
+testmat = scipy.io.loadmat('data/test.mat')
 
-#X_train = np.transpose(np.array(trainmat['trainxdata']),axes=(2,0,1))
-#y_train = np.array(trainmat['traindata']).T
+X_train = np.transpose(np.array(trainmat['trainxdata']),axes=(2,0,1))
+y_train = np.array(trainmat['traindata']).T
 
-X_train = np.ones((500,1000,4))
-y_train = np.zeros((500,919))
+#X_train = np.ones((500,1000,4))
+#y_train = np.zeros((500,919))
 
 nadam = Nadam(lr=0.015, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
 
@@ -57,12 +57,10 @@ model.compile(optimizer= nadam, loss='mse', metrics = ['accuracy'])
 
 encoder = Model(inputs=model.input, outputs=(model.layers[2]).output)
 
-earlystopper = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
+earlystopper = EarlyStopping(monitor='val_loss', patience=2, verbose=1)
 
-model.fit(X_train, X_train, batch_size=100, nb_epoch=10, shuffle=True, verbose=2 #show_accuracy=True,
-          #validation_data=(np.transpose(validmat['validxdata'],axes=(0,2,1)), validmat['validdata']),
-          #callbacks=[checkpointer,earlystopper]
-          )
+model.fit(X_train, X_train, batch_size=100, epochs=10, shuffle=True, verbose=2,
+          callbacks=[earlystopper])
 
 encodings = encoder.predict(X_train, batch_size = 100, verbose=2)
 
@@ -70,9 +68,9 @@ classifier = RandomForestClassifier()
 
 classifier.fit(encodings, y_train)
 
-#evaluation = classifier.predict(np.transpose(testmat['testxdata'],axes=(0,2,1)))
+evaluation = classifier.predict(np.transpose(testmat['testxdata'],axes=(0,2,1)))
 
-#acc = skl.metrics.accuracy_score(testmat['testdata'], evaluation)
+acc = skl.metrics.accuracy_score(testmat['testdata'], evaluation)
 
-#print(acc)
+print(acc)
 
