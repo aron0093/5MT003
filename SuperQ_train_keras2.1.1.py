@@ -19,7 +19,9 @@ from keras.optimizers import Nadam
 from keras.models import Sequential, Model
 from keras.layers.core import Dense, Reshape, Flatten
 from keras.layers.convolutional import Conv1D
+from keras.layers.recurrent import LSTM
 from keras.callbacks import EarlyStopping
+from keras.layers import Bidirectional
 
 
 import sklearn as skl
@@ -36,12 +38,23 @@ y_train = np.array(trainmat['traindata']).T
 #X_train = np.ones((500,1000,4))
 #y_train = np.zeros((500,919))
 
+lstm = LSTM(units=320, return_sequences=True)
+brnn = Bidirectional(lstm)
+
 nadam = Nadam(lr=0.015, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
 
 print('building model')
 
 model = Sequential()
 model.add(Conv1D(320, 26, input_shape=(1000,4)))
+
+model.add(MaxPooling1D(strides=13, pool_size=13))
+
+model.add(Dropout(0.2))
+
+model.add(brnn)
+
+model.add(Dropout(0.5))
 
 model.add(Flatten())
 
@@ -55,7 +68,7 @@ print('compiling model')
 
 model.compile(optimizer= nadam, loss='mse', metrics = ['accuracy'])
 
-encoder = Model(inputs=model.input, outputs=(model.layers[2]).output)
+encoder = Model(inputs=model.input, outputs=(model.layers[6]).output)
 
 earlystopper = EarlyStopping(monitor='val_loss', patience=2, verbose=1)
 
