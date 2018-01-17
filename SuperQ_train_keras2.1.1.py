@@ -17,8 +17,8 @@ np.random.seed(1337) # for reproducibility
 from keras.preprocessing import sequence
 from keras.optimizers import Nadam
 from keras.models import Sequential, Model
-from keras.layers.core import Dense, Reshape, Flatten
-from keras.layers.convolutional import Conv1D
+from keras.layers.core import Dense, Reshape, Flatten, Dropout
+from keras.layers.convolutional import Conv1D, MaxPooling1D
 from keras.layers.recurrent import LSTM
 from keras.callbacks import EarlyStopping
 from keras.layers import Bidirectional
